@@ -1,13 +1,13 @@
-from fastapi import APIRouter, HTTPException, status
-from app.resources.market.market_schema import MarketResponse
+from fastapi import APIRouter, HTTPException, status, Body
+from app.resources.market.market_schema import MarketResponse, MarketRequest
 from typing import List
-from resources.market.market_service import get_market_prices_data
+from resources.market.market_service import post_market_prices_data
 
 router = APIRouter(
     prefix="/market-prices",
     tags=["Market"]
 )
 
-@router.get("/", response_model=List[MarketResponse])
-async def get_market_prices():
-    return await get_market_prices_data()
+@router.post("/", response_model=List[MarketResponse])
+async def post_market_prices(request: MarketRequest = Body(...)):
+    return await post_market_prices_data(request)

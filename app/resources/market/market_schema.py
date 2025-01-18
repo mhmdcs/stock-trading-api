@@ -1,5 +1,11 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, Field, ValidationError
+from typing import List, Optional
+
+class MarketRequest(BaseModel):
+    """Feed default ticker symbols for testing"""
+    symbols: List[str] = Field(
+        default=["AAPL", "MSFT", "GOOG", "AMZN", "META", "MHMD"]
+    )
 
 class MarketResponse(BaseModel):
     symbol: str

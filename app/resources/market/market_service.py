@@ -1,17 +1,18 @@
 from utils.config import settings
+from .market_schema import MarketRequest
 import httpx
 
-async def get_market_prices_data():
+async def post_market_prices_data(marketRequest: MarketRequest):
     url = "https://twelve-data1.p.rapidapi.com/price"
     headers = {
         "x-rapidapi-host": settings.rapidapi_host,
         "x-rapidapi-key": settings.rapidapi_key,
     }
-    symbols = ["AAPL", "MSFT", "GOOG", "AMZN", "META", "FCBK"]
+
     market_response = []
 
     async with httpx.AsyncClient() as client:
-        for symbol in symbols:
+        for symbol in marketRequest.symbols:
             params = {
                 "symbol": symbol,
                 "outputsize": "30",
