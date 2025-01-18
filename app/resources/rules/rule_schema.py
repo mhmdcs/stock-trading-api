@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from uuid import UUID
 
 class RuleCreate(BaseModel):
     name: str
@@ -6,7 +7,7 @@ class RuleCreate(BaseModel):
     symbol: str
 
 class RuleResponse(RuleCreate):
-    id: int
+    id: UUID
 
 class RuleUpdate(BaseModel):
     name: str
