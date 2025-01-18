@@ -1,9 +1,8 @@
-""" Rule Service"""
-"""_summary_
-this file to write any business logic for the Rules
-"""
-# from resources.alerts.alerts_schema import AlertCreate
-# from resources.alerts.alert_dal import create_alert
+from resources.alerts.alert_dal import create_alert, get_all_alerts
+from sqlalchemy.ext.asyncio import AsyncSession
 
-# def create_new_alert( rule: AlertCreate, session ):
-#     return create_rule( rule=rule, session=session)
+async def process_create_alert(db: AsyncSession, symbol: str, rule_id: int):
+    return await create_alert(db, symbol, rule_id)
+
+async def process_get_all_alerts(db: AsyncSession):
+    return await get_all_alerts(db)

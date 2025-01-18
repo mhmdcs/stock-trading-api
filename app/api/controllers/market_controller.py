@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Body
-from app.resources.market.market_schema import MarketResponse, MarketRequest
+from resources.market.market_schema import MarketResponse, MarketRequest
 from typing import List
 from resources.market.market_service import process_market_prices_data
 

@@ -1,10 +1,14 @@
-""" Alert DAL"""
-"""_summary_
-this file is to right any ORM logic for the Alert model
-"""
-# from resources.alerts.alert_schema import AlertCreate
-# from db.models import Rule
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from resources.alerts.alert_model import Alert
 
-# def create_rule( rule: AlertCreate, session ):
-#     new_alert = Alert()
-#     session.add(new_alert)
+async def create_alert(db: AsyncSession, symbol: str, rule_id: int):
+    new_alert = Alert(symbol=symbol, rule_id=rule_id)
+    db.add(new_alert)
+    await db.commit()
+    await db.refresh(new_alert)
+    return new_alert
+
+async def get_all_alerts(db: AsyncSession):
+    result = await db.execute(select(Alert))
+    return result.scalars().all()
