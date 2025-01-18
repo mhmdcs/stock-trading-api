@@ -1,8 +1,9 @@
+from fastapi import HTTPException, status
 from utils.config import settings
 from .market_schema import MarketRequest
 import httpx
 
-async def post_market_prices_data(marketRequest: MarketRequest):
+async def process_market_prices_data(marketRequest: MarketRequest):
     url = "https://twelve-data1.p.rapidapi.com/price"
     headers = {
         "x-rapidapi-host": settings.rapidapi_host,
@@ -10,6 +11,12 @@ async def post_market_prices_data(marketRequest: MarketRequest):
     }
 
     market_response = []
+
+    if not marketRequest.symbols:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="The ticker symbols list can't be empty. Please provide at least one symbol."
+        )
 
     async with httpx.AsyncClient() as client:
         for symbol in marketRequest.symbols:
