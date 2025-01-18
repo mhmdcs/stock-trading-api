@@ -1,4 +1,6 @@
-""" Market Schema """
-"""_summary_
-This file to abstract any validation logic for the Market
-"""
+from pydantic import BaseModel
+from typing import Optional
+
+class MarketResponse(BaseModel):
+    symbol: str
+    price: Optional[float]
