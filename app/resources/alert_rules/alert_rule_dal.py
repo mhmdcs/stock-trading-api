@@ -27,6 +27,13 @@ async def update_alert_rule(db: AsyncSession, alert_rule_id: uuid.UUID, name: st
     await db.refresh(alert_rule)
     return alert_rule
 
+async def get_alert_rule_by_symbol(db: AsyncSession, symbol: str):
+    result = await db.execute(select(AlertRule).filter(AlertRule.symbol == symbol))
+    alert_rule = result.scalar_one_or_none()
+    if not alert_rule:
+        return None
+    return alert_rule
+
 async def delete_alert_rule(db: AsyncSession, alert_rule_id: uuid.UUID):
     result = await db.execute(select(AlertRule).filter(AlertRule.id == alert_rule_id))
     alert_rule = result.scalar_one_or_none()

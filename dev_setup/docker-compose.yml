@@ -56,3 +56,25 @@ services:
     depends_on:
       - database
       - app
+
+  consumer:
+    build:
+      context: ../.
+      dockerfile: dev_setup/Dockerfile
+    container_name: consumer
+    command: ["python", "app/core/message_consumer.py"]
+    depends_on:
+      - broker
+      - database
+      - app
+
+  publisher:
+    build:
+      context: ../.
+      dockerfile: dev_setup/Dockerfile
+    container_name: publisher
+    command: ["python", "app/core/message_publisher.py"]
+    depends_on:
+      - broker
+      - database
+      - app

@@ -1,52 +1,80 @@
+import pika
 import asyncio
-import os
 import json
-from aio_pika import connect_robust, ExchangeType
-from resources.alerts.alert_service import process_create_alert
-from db.database import async_session
+import logging
+import time
+import sys
+import os
 
-RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
-RABBITMQ_USER = os.getenv("RABBITMQ_USER", "guest")
-RABBITMQ_PASSWORD = os.getenv("RABBITMQ_PASSWORD", "guest")
+# Add the project root to the Python path
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(project_root)
+from app.resources.alerts.alert_service import process_create_alert
+from app.resources.alert_rules.alert_rule_service import process_get_alert_rule_by_symbol
+from app.db.database import async_session
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("RabbitMQ Subscriber")
+
+RABBITMQ_HOST = "localhost"
 EXCHANGE_NAME = "alerts_exchange"
 QUEUE_NAME = "threshold_alerts_queue"
 ROUTING_KEY = "alerts.*"
 
-async def process_alert_event(symbol: str, alert_message: str):
-    """Process the THRESHOLD_ALERT event and create a new alert record"""
-    async with async_session() as db:
-        await process_create_alert(db, symbol, alert_message)
-        print(f"Alert created for symbol: {symbol}, alert_message: {alert_message}")
-
-async def handle_message(message):
-    async with message.process():
+# wait for rabbitmq broker to be initialized first via docker compose
+def wait_for_rabbitmq():
+    while True:
         try:
-            body = json.loads(message.body)
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
+            connection.close()
+            break
+        except:
+            time.sleep(5)
 
-            if body.get("eventName") == "THRESHOLD_ALERT":
-                symbol = body["eventData"].get("symbol")
-                alert_message = body["eventData"].get("alert_message")
+def init_subscriber():
+    wait_for_rabbitmq()
 
-                if symbol and alert_message:
-                    await process_alert_event(symbol, alert_message)
-        except Exception as e:
-            print(f"Error processing message: {e}")
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
+    channel = connection.channel()
 
-async def main():
-    connection = await connect_robust(f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}/")
+    channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="topic", durable=True)
+    channel.queue_declare(queue=QUEUE_NAME, durable=True)
+    channel.queue_bind(exchange=EXCHANGE_NAME, queue=QUEUE_NAME, routing_key=ROUTING_KEY)
 
-    async with connection:
-        channel = await connection.channel()
+    return channel
 
-        exchange = await channel.declare_exchange(EXCHANGE_NAME, ExchangeType.TOPIC, durable=True)
+def on_event(ch, method, properties, body):
+    try:
+        message = json.loads(body)
+        logger.info(f"Received message: {message}")
 
-        queue = await channel.declare_queue(QUEUE_NAME, durable=True)
+        if message.get("eventName") == "THRESHOLD_ALERT":
+            symbol = message["eventData"].get("symbol")
+            alert_message = message["eventData"].get("alert_message")
 
-        await queue.bind(exchange, ROUTING_KEY)
+            if symbol and alert_message:
+                logger.info(f"Processing alert for symbol: {symbol}, alert_message: {alert_message}")
+                process_alert_event(symbol, alert_message)
+    except Exception as e:
+        logger.error(f"Error processing message: {e}")
+    finally:
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
-        print("listening for THRESHOLD_ALERT events to consume...")
+def process_alert_event(symbol: str, alert_message: str):
+    """Process the THRESHOLD_ALERT event and create a new alert record."""
 
-        await queue.consume(handle_message)
+    async def async_process():
+        async with async_session() as db:
+            alert_rule = await process_get_alert_rule_by_symbol(db, symbol)
+            await process_create_alert(db, symbol, alert_message, alert_rule.id)
+            logger.info(f"Alert created for symbol: {symbol}, alert_message: {alert_message}")
+
+    asyncio.run(async_process())
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    print("inside consumer main")
+    logger.info("Starting RabbitMQ Subscriber...")
+    channel = init_subscriber()
+
+    channel.basic_consume(queue=QUEUE_NAME, on_message_callback=on_event)
+    channel.start_consuming()
