@@ -1,15 +1,15 @@
 from pydantic import BaseModel
 from uuid import UUID
 
-class RuleCreate(BaseModel):
+class AlertRuleCreate(BaseModel):
     name: str
     threshold_price: float
     symbol: str
 
-class RuleResponse(RuleCreate):
+class AlertRuleResponse(AlertRuleCreate):
     id: UUID
 
-class RuleUpdate(BaseModel):
+class AlertRuleUpdate(BaseModel):
     name: str
     threshold_price: float
     symbol: str

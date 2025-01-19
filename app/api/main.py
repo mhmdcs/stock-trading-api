@@ -14,7 +14,7 @@ async def root():
 
 @app.on_event("startup")
 async def on_startup():
-    # await reset_database() # for testing purposes
+    await reset_database() # for testing purposes
     await initialize_database()
     await seed_database()
 

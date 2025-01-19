@@ -1,5 +1,5 @@
 from db.database import engine, Base, get_db
-from resources.rules.rule_dal import create_rule
+from app.resources.alert_rules.alert_rule_dal import create_alert_rule
 
 async def initialize_database():
     async with engine.begin() as conn:
@@ -12,7 +12,7 @@ async def seed_database():
             {"name": "Apple Below $150", "threshold_price": 150, "symbol": "AAPL"},
         ]
         for data in initial_data:
-            await create_rule(db, **data)
+            await create_alert_rule(db, **data)
         break
 
 async def reset_database():

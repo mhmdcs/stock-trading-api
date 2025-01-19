@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from utils.config import settings
 from resources.alerts.alert_model import Alert
-from resources.rules.rule_model import Rule
+from app.resources.alert_rules.alert_rule_model import AlertRule
 
 engine = create_async_engine(
     settings.database_connection_string,

@@ -1,14 +1,14 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, String, Float
 from sqlalchemy.orm import relationship
 from db.model_base import Base
 
-class Rule(Base):
-    __tablename__ = "rules"
+class AlertRule(Base):
+    __tablename__ = "alert_rules"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False) # e.g. "Apple Below $150", "Tesla Below $150"
     threshold_price = Column(Float, nullable=False)
     symbol = Column(String, nullable=False)
-    alert = relationship("Alert", back_populates="rule", uselist=False)
+    alerts = relationship("Alert", back_populates="alert_rule")
