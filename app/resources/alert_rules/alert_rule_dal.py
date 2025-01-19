@@ -29,7 +29,7 @@ async def update_alert_rule(db: AsyncSession, alert_rule_id: uuid.UUID, name: st
 
 async def delete_alert_rule(db: AsyncSession, alert_rule_id: uuid.UUID):
     result = await db.execute(select(AlertRule).filter(AlertRule.id == alert_rule_id))
-    alert_rule = result.scalars().first()
+    alert_rule = result.scalar_one_or_none()
     if not alert_rule:
         return None
     await db.delete(alert_rule)
