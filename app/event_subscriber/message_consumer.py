@@ -72,7 +72,6 @@ def process_alert_event(symbol: str, alert_message: str):
     asyncio.run(async_process())
 
 if __name__ == "__main__":
-    print("inside consumer main")
     logger.info("Starting RabbitMQ Subscriber...")
     channel = init_subscriber()
 

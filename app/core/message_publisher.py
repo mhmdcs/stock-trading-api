@@ -52,5 +52,4 @@ def publish_threshold_alert(symbol: str, alert_message: str):
 
 if __name__ == "__main__":
     # publish a test alert
-    print("inside publisher main")
-    publish_threshold_alert(symbol="GOOG", alert_message="Apple above $300")
+    publish_threshold_alert(symbol="AAPL", alert_message="Apple above $300")

@@ -10,7 +10,7 @@ services:
     build:
       context: ../.
       dockerfile: dev_setup/Dockerfile
-    container_name: investor-bulletin
+    container_name: trading-api
     ports:
       - "8000:8000"
     networks:

@@ -1,8 +1,8 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, String, Float, UniqueConstraint
+from sqlalchemy import Column, String, Float
 from sqlalchemy.orm import relationship
-from app.db.model_base import Base
+from db.model_base import Base
 
 class AlertRule(Base):
     __tablename__ = "alert_rules"
@@ -12,7 +12,3 @@ class AlertRule(Base):
     threshold_price = Column(Float, nullable=False)
     symbol = Column(String, nullable=False)
     alerts = relationship("Alert", back_populates="alert_rule")
-
-    __table_args__ = (
-    UniqueConstraint("name", "symbol", "threshold_price",name="uq_alert_rule"),
-    )
