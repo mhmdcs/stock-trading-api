@@ -9,6 +9,8 @@ class Alert(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     symbol = Column(String, nullable=False)
-    alert_rule_id = Column(UUID(as_uuid=True), ForeignKey("alert_rules.id"), nullable=False)
     alert_message = Column(String, nullable=False) # e.g. "Apple Above $300"
+    status = Column(String, nullable=True) # e.g. now, recent, old
+    priority = Column(String, nullable=True) # e.g. high, medium, low
+    alert_rule_id = Column(UUID(as_uuid=True), ForeignKey("alert_rules.id"), nullable=False)
     alert_rule = relationship("AlertRule", back_populates="alerts")

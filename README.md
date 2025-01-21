@@ -1,6 +1,8 @@
-# 📈 Trading API Project
+# 📈 Trading API Service
 
-This system allows the user to define alert rules for stock prices, fetch real-time market data, and trigger alerts when thresholds are crossed. The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
+This service allows the user to define alert rules for stock prices, fetch real-time market data, and trigger alerts when thresholds are crossed.
+
+The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 
 ---
 
@@ -21,7 +23,7 @@ This system allows the user to define alert rules for stock prices, fetch real-t
    - Uses Celery and Celery Beat to schedule tasks to periodically fetch market data and process alerts.
 
 5. **Swagger/OpenAPI Documentation**:
-   - Automatically generated API docs at `/docs` or `/redoc` (Thanks to FastAPI ❤️).
+   - Automatically generated API docs at `/docs` or `/redoc` (Thanks FastAPI ❤️).
 
 ---
 
@@ -62,12 +64,12 @@ This system allows the user to define alert rules for stock prices, fetch real-t
 3. Test the endpoints:
    - Use Swagger UI or tools like `Postman` and `curl`.
 
-![test1](./imgs/01-swagger-endpoints.png)
-![test2](./imgs/02-terminal-test.gif)
+![phase1_a](./imgs/phase1_a.png)
+![phase1_b](./imgs/phase1_b.png)
 
 ---
 
-### **Phase 2: RabbitMQ Integration**
+### **Phase 2: RabbitMQ Enqueueing**
 
 **Features**:
 - Publishes `THRESHOLD_ALERT` events to RabbitMQ when stock prices cross thresholds.
@@ -81,31 +83,35 @@ This system allows the user to define alert rules for stock prices, fetch real-t
     ```bash
    make up
    ```
-   Or:
+   or:
     ```bash
    docker-compose up -d
    ```
 2. Publish an alert manually:
    ```bash
-   python app/core/message_publisher.py
+   export PYTHONPATH="$(pwd)" && python app/core/message_publisher.py
    ```
 3. Start the RabbitMQ consumer:
    ```bash
-   python app/event_subscriber/message_consumer.py
+   export PYTHONPATH="$(pwd)" && python app/event_subscriber/message_consumer.py
    ```
 4. Verify RabbitMQ dashboard:
    - Visit `http://localhost:15672` (Default credentials: `guest/guest`).
-5. Example Test GIFs/Images:
+
    - RabbitMQ Dashboard: `/imgs/03-rabbitmq-dashboard.png`
    - Terminal Logs: `/imgs/04-rabbitmq-consumer.gif`
 
 
-![RabbitMQ Dashboard](./imgs/03-rabbitmq-dashboard.png)
-![Terminal Logs](./imgs/04-rabbitmq-consumer.gif)
+![phase2_a](./imgs/phase2_a.png)
+![phase2_b](./imgs/phase2_b.png)
+![phase2_c](./imgs/phase2_c.png)
+![phase2_d](./imgs/phase2_d.png)
+![phase2_e](./imgs/phase2_e.png)
+
 
 ---
 
-### **Phase 3: Celery Integration**
+### **Phase 3: Celery Scheduling**
 
 **Features**:
 - Scheduled task to fetch market data every 5 minutes using Celery Beat.
@@ -114,18 +120,19 @@ This system allows the user to define alert rules for stock prices, fetch real-t
 #### **How to Run and Test Phase 3**
 1. Start Celery Worker:
    ```bash
-   celery -A celery_app.celery worker --loglevel=info
+   export PYTHONPATH="$(pwd)" && elery -A app.worker.celery_app worker --loglevel=info
    ```
 2. Start Celery Beat Scheduler:
    ```bash
-   celery -A celery_app.celery beat --loglevel=info
+   export PYTHONPATH="$(pwd)" && celery -A app.worker.celery_app beat --loglevel=info
    ```
 3. Verify Periodic Tasks:
    - Check logs of the worker to see periodic task execution.
    - RabbitMQ queue will contain published alerts.
 
-![Celery Worker Logs](./imgs/05-celery-worker.png)
-![Celery Beat Logs](./imgs/06-celery-beat.gif)
+![phase3_a](./imgs/phase3_a.png)
+![phase3_b](./imgs/phase3_b.png)
+
 
 ---
 
@@ -145,6 +152,6 @@ RAPIDAPI_KEY=your-rapidapi-key
 
 ## **License**
 
-This project is licensed under the "if this app makes you lose all of your lifesavings then don't associate me with it" license 💯
+This project is licensed under the "if this app makes you lose all of your life savings then don't associate me with it" license 💯
 
 ---

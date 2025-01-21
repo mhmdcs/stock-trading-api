@@ -20,18 +20,7 @@ EXCHANGE_NAME = "alerts_exchange"
 QUEUE_NAME = "threshold_alerts_queue"
 ROUTING_KEY = "alerts.*"
 
-# wait for rabbitmq broker to be initialized first
-def rabbitmq_healthcheck():
-    while True:
-        try:
-            connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
-            connection.close()
-            break
-        except:
-            time.sleep(5)
-
 def init_subscriber():
-    rabbitmq_healthcheck()
 
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
     channel = connection.channel()
@@ -50,22 +39,24 @@ def on_event(ch, method, properties, body):
         if message.get("eventName") == "THRESHOLD_ALERT":
             symbol = message["eventData"].get("symbol")
             alert_message = message["eventData"].get("alert_message")
+            status = message["eventData"].get("status")
+            priority = message["eventData"].get("priority")
 
             if symbol and alert_message:
                 logger.info(f"Processing alert for symbol: {symbol}, alert_message: {alert_message}")
-                process_alert_event(symbol, alert_message)
+                process_alert_event(symbol, alert_message, status, priority)
     except Exception as e:
         logger.error(f"Error processing message: {e}")
     finally:
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
-def process_alert_event(symbol: str, alert_message: str):
+def process_alert_event(symbol: str, alert_message: str, status: str, priority: str):
     """Process the THRESHOLD_ALERT event and create a new alert record."""
 
     async def async_process():
         async with async_session() as db:
             alert_rule = await process_get_alert_rule_by_symbol(db, symbol)
-            await process_create_alert(db, symbol, alert_message, alert_rule.id)
+            await process_create_alert(db, symbol, alert_message, status, priority, alert_rule.id)
             logger.info(f"Alert created for symbol: {symbol}, alert_message: {alert_message}")
 
     asyncio.run(async_process())
