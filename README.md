@@ -140,7 +140,7 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 
 Add these to your `.env` file:
 ```
-DATABASE_URL=cockroachdb://root@localhoste:26257/defaultdb
+DATABASE_URL=cockroachdb+asyncpg://root@localhoste:26257/defaultdb
 RABBITMQ_HOST=localhost
 RABBITMQ_USER=guest
 RABBITMQ_PASSWORD=guest
