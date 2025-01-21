@@ -18,7 +18,8 @@ services:
     env_file:
       - ../.env
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
   database:
     container_name: database-node
@@ -31,6 +32,11 @@ services:
       - "8080:8080"
     networks:
       - internal_nw
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   broker:
     image: rabbitmq:3.8-management
@@ -57,24 +63,38 @@ services:
       - database
       - app
 
-  consumer:
-    build:
-      context: ../.
-      dockerfile: dev_setup/Dockerfile
-    container_name: consumer
-    command: ["python", "app/core/message_consumer.py"]
-    depends_on:
-      - broker
-      - database
-      - app
-
   publisher:
     build:
       context: ../.
       dockerfile: dev_setup/Dockerfile
-    container_name: publisher
-    command: ["python", "app/core/message_publisher.py"]
+    container_name: publisher-service
+    command: python -m app.core.message_publisher
+    networks:
+      - internal_nw
+    env_file:
+      - ../.env
+    environment:
+      PYTHONPATH: /src
     depends_on:
-      - broker
-      - database
-      - app
+      broker:
+        condition: service_started
+      database:
+        condition: service_healthy
+
+  consumer:
+    build:
+      context: ../.
+      dockerfile: dev_setup/Dockerfile
+    container_name: consumer-service
+    command: python -m app.event_subscriber.message_consumer
+    networks:
+      - internal_nw
+    env_file:
+      - ../.env
+    environment:
+      PYTHONPATH: "${PYTHONPATH}:/src"
+    depends_on:
+      broker:
+        condition: service_started
+      database:
+        condition: service_healthy
