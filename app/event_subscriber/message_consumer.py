@@ -5,24 +5,23 @@ import logging
 import time
 import sys
 import os
-
-# Add the project root to the Python path
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.append(project_root)
 from app.resources.alerts.alert_service import process_create_alert
 from app.resources.alert_rules.alert_rule_service import process_get_alert_rule_by_symbol
+from app.utils.config import settings
 from app.db.database import async_session
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("RabbitMQ Subscriber")
 
-RABBITMQ_HOST = "localhost"
+RABBITMQ_HOST = settings.rabbitmq_host
+RABBITMQ_USER = settings.rabbitmq_user
+RABBITMQ_PASSWORD = settings.rabbitmq_password
 EXCHANGE_NAME = "alerts_exchange"
 QUEUE_NAME = "threshold_alerts_queue"
 ROUTING_KEY = "alerts.*"
 
-# wait for rabbitmq broker to be initialized first via docker compose
-def wait_for_rabbitmq():
+# wait for rabbitmq broker to be initialized first
+def rabbitmq_healthcheck():
     while True:
         try:
             connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
@@ -32,7 +31,7 @@ def wait_for_rabbitmq():
             time.sleep(5)
 
 def init_subscriber():
-    wait_for_rabbitmq()
+    rabbitmq_healthcheck()
 
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
     channel = connection.channel()

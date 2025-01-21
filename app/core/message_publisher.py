@@ -3,18 +3,19 @@ import json
 import logging
 from amqpstorm.exception import AMQPConnectionError
 import time
+from app.utils.config import settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("RabbitMQ Publisher")
 
-RABBITMQ_HOST = "localhost"
-RABBITMQ_USER = "guest"
-RABBITMQ_PASSWORD = "guest"
+RABBITMQ_HOST = settings.rabbitmq_host
+RABBITMQ_USER = settings.rabbitmq_user
+RABBITMQ_PASSWORD = settings.rabbitmq_password
 EXCHANGE_NAME = "alerts_exchange"
 ROUTING_KEY = "alerts.threshold"
 
-# wait for rabbitmq broker to be initialized first via docker compose
-def wait_for_rabbitmq():
+# wait for rabbitmq broker to be initialized first
+def rabbitmq_healthcheck():
     while True:
         try:
             connection = Connection(RABBITMQ_HOST, RABBITMQ_USER, RABBITMQ_PASSWORD)
@@ -24,7 +25,7 @@ def wait_for_rabbitmq():
             time.sleep(5)
 
 def publish_threshold_alert(symbol: str, alert_message: str):
-    wait_for_rabbitmq()
+    rabbitmq_healthcheck()
 
     """Publish a THRESHOLD_ALERT event to RabbitMQ queue"""
     connection = None
