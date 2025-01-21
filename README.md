@@ -1,4 +1,4 @@
-# 📈 Trading API Service
+# 📈 Stock Trading API Service
 
 This service allows the user to define alert rules for stock prices, fetch real-time market data, and trigger alerts when thresholds are crossed.
 
