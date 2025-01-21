@@ -98,10 +98,6 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 4. Verify RabbitMQ dashboard:
    - Visit `http://localhost:15672` (Default credentials: `guest/guest`).
 
-   - RabbitMQ Dashboard: `/imgs/03-rabbitmq-dashboard.png`
-   - Terminal Logs: `/imgs/04-rabbitmq-consumer.gif`
-
-
 ![phase2_a](./imgs/phase2_a.png)
 ![phase2_b](./imgs/phase2_b.png)
 ![phase2_c](./imgs/phase2_c.png)
