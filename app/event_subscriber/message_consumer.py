@@ -38,7 +38,7 @@ def on_event(ch, method, properties, body):
             status = message["eventData"].get("status")
             priority = message["eventData"].get("priority")
 
-            if symbol and alert_message:
+            if symbol and alert_message and status and priority:
                 logger.info(f"Processing alert for symbol: {symbol}, alert_message: {alert_message}")
                 process_alert_event(symbol, alert_message, status, priority)
     except Exception as e:

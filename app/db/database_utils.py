@@ -6,7 +6,7 @@ async def initialize_database():
         await conn.run_sync(Base.metadata.create_all)
 
 async def seed_database():
-    async for db in get_db():
+    async with get_db() as db:
         existing_rules = await get_all_alert_rules(db)
         if not existing_rules:  # Only seed if the table is empty
             initial_data = [
@@ -15,7 +15,6 @@ async def seed_database():
             ]
             for data in initial_data:
                 await create_alert_rule(db, **data)
-        break
 
 # just for testing purposes
 async def reset_database():

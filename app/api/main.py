@@ -1,7 +1,7 @@
 from uvicorn import run
 from fastapi import FastAPI
 from app.api.routes import init_routes
-from app.db.init import initialize_database, seed_database
+from app.db.database_utils import initialize_database, seed_database
 
 app = init_routes(FastAPI())
 

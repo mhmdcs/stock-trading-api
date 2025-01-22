@@ -7,7 +7,7 @@ from app.resources.alert_rules.alert_rule_schema import AlertRuleResponse, Alert
 from app.resources.alert_rules.alert_rule_service import process_create_alert_rule, process_get_all_alert_rules, process_update_alert_rule, process_delete_alert_rule
 
 router = APIRouter(
-    prefix="/alert_rules",
+    prefix="/alert-rules",
     tags=["Alert Rules"]
 )
 

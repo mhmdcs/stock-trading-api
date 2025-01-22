@@ -41,4 +41,4 @@ def publish_threshold_alert(symbol: str, alert_message: str, status: str, priori
 
 if __name__ == "__main__":
     # publish a test alert
-    publish_threshold_alert(symbol="AAPL", alert_message="Apple above $300", status="now", priority="high")
+    publish_threshold_alert(symbol="AAPL", alert_message="Apple Above $200", status="now", priority="high")
