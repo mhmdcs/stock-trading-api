@@ -7,10 +7,9 @@ RABBITMQ_USER = settings.rabbitmq_user
 RABBITMQ_PASSWORD = settings.rabbitmq_password
 
 CELERY_BROKER_URL = f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}:5672//"
-CELERY_RESULT_BACKEND = "rpc://"
 
 # Celery instance for both the celery worker and celery beat scheduler
-celery = Celery("tasks", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
+celery = Celery("tasks", broker=CELERY_BROKER_URL)
 
 celery.conf.include = ['app.worker.celery_task']
 
