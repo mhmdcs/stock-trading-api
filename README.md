@@ -93,11 +93,11 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
    ```
 2. Publish an alert manually:
    ```bash
-   export PYTHONPATH="$(pwd)" python app/core/message_publisher.py
+   PYTHONPATH="$(pwd)" python app/core/message_publisher.py
    ```
 3. Start the RabbitMQ consumer:
    ```bash
-   export PYTHONPATH="$(pwd)" python app/event_subscriber/message_consumer.py
+   PYTHONPATH="$(pwd)" python app/event_subscriber/message_consumer.py
    ```
 4. Verify RabbitMQ dashboard:
    - Visit `http://localhost:15672` (Default credentials: `guest/guest`).
@@ -120,11 +120,11 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 #### **How to Run and Test Phase 3**
 1. Start Celery Worker:
    ```bash
-   export PYTHONPATH="$(pwd)" celery -A app.worker.celery_app worker --loglevel=info
+   PYTHONPATH="$(pwd)" celery -A app.worker.celery_app worker --loglevel=info
    ```
 2. Start Celery Beat Scheduler:
    ```bash
-   export PYTHONPATH="$(pwd)" celery -A app.worker.celery_app beat --loglevel=info
+   PYTHONPATH="$(pwd)" celery -A app.worker.celery_app beat --loglevel=info
    ```
 3. Verify Periodic Tasks:
    - Check logs of the worker to see periodic task execution.
