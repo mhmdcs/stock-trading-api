@@ -1,13 +1,14 @@
 from celery import Celery
 from celery.schedules import crontab
 
+# Celery scheduler
 celery = Celery()
 
 celery.conf.beat_schedule = {
     "fetch-market-data-every-5-minutes": {
-        "task": "app.tasks.fetch_and_check_market_data",
+        "task": "app.worker.celery_task.fetch_and_check_market_data",
         "schedule": crontab(minute="*/5"),
     }
 }
 
-celery.conf.timezone = "UTC"
+celery.conf.timezone = "Asia/Riyadh"

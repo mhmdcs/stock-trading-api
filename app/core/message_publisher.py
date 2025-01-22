@@ -16,7 +16,6 @@ ROUTING_KEY = "alerts.threshold"
 
 
 def publish_threshold_alert(symbol: str, alert_message: str, status: str, priority: str):
-
     """Publish a THRESHOLD_ALERT event to RabbitMQ queue"""
     connection = None
     try:

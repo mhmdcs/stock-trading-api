@@ -21,7 +21,6 @@ QUEUE_NAME = "threshold_alerts_queue"
 ROUTING_KEY = "alerts.*"
 
 def init_subscriber():
-
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
     channel = connection.channel()
 

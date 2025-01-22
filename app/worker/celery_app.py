@@ -9,6 +9,7 @@ RABBITMQ_PASSWORD = settings.rabbitmq_password
 CELERY_BROKER_URL = f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}:5672//"
 CELERY_RESULT_BACKEND = "rpc://"
 
+# Celery worker
 celery = Celery("tasks", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
 celery.autodiscover_tasks(["app.worker"])

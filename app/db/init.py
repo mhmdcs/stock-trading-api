@@ -10,8 +10,8 @@ async def seed_database():
         existing_rules = await get_all_alert_rules(db)
         if not existing_rules:  # Only seed if the table is empty
             initial_data = [
-                {"name": "Tesla Above $800", "threshold_price": 800, "symbol": "TSLA"},
-                {"name": "Apple Below $150", "threshold_price": 150, "symbol": "AAPL"},
+                {"name": "Tesla Below $800", "threshold_price": 800, "symbol": "TSLA"},
+                {"name": "Apple Above $150", "threshold_price": 150, "symbol": "AAPL"},
             ]
             for data in initial_data:
                 await create_alert_rule(db, **data)
