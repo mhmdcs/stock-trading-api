@@ -1,6 +1,6 @@
 from uuid import UUID
 import uuid
-from .alert_dal import create_alert, get_all_alerts
+from app.resources.alerts.alert_dal import create_alert, get_all_alerts
 from sqlalchemy.ext.asyncio import AsyncSession
 
 async def process_create_alert(db: AsyncSession, symbol: str, alert_message: str, status:str, priority: str, id: uuid.UUID):

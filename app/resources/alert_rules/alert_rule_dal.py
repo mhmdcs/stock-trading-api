@@ -1,7 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.exc import NoResultFound
-from .alert_rule_model import AlertRule
+from app.resources.alert_rules.alert_rule_model import AlertRule
 import uuid
 
 async def create_alert_rule(db: AsyncSession, name: str, threshold_price: float, symbol: str):

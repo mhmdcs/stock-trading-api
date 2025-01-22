@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from .alert_rule_dal import create_alert_rule, get_all_alert_rules, update_alert_rule, delete_alert_rule, get_alert_rule_by_symbol
+from app.resources.alert_rules.alert_rule_dal import create_alert_rule, get_all_alert_rules, update_alert_rule, delete_alert_rule, get_alert_rule_by_symbol
 from app.resources.alert_rules.alert_rule_schema import AlertRuleCreate, AlertRuleUpdate
 from uuid import UUID
 

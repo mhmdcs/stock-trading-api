@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy import Column, String, ForeignKey, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from db.model_base import Base
+from app.db.model_base import Base
 
 class Alert(Base):
     __tablename__ = "alerts"

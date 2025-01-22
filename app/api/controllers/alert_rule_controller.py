@@ -2,7 +2,7 @@ from fastapi import Depends, APIRouter, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from uuid import UUID
-from db.database import get_db
+from app.db.database import get_db
 from app.resources.alert_rules.alert_rule_schema import AlertRuleResponse, AlertRuleCreate, AlertRuleUpdate
 from app.resources.alert_rules.alert_rule_service import process_create_alert_rule, process_get_all_alert_rules, process_update_alert_rule, process_delete_alert_rule
 

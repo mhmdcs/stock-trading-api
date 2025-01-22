@@ -1,7 +1,8 @@
-from .model_base import Base
+from app.db.model_base import Base
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from app.utils.config import settings
+
 engine = create_async_engine(
     settings.database_connection_string,
     isolation_level="SERIALIZABLE",

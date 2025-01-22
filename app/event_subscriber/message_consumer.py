@@ -2,9 +2,6 @@ import pika
 import asyncio
 import json
 import logging
-import time
-import sys
-import os
 from app.resources.alerts.alert_service import process_create_alert
 from app.resources.alert_rules.alert_rule_service import process_get_alert_rule_by_symbol
 from app.utils.config import settings

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from db.database import get_db
+from app.db.database import get_db
 from typing import List
-from resources.alerts.alert_schema import AlertResponse
-from resources.alerts.alert_service import process_get_all_alerts
+from app.resources.alerts.alert_schema import AlertResponse
+from app.resources.alerts.alert_service import process_get_all_alerts
 
 router = APIRouter(
     prefix="/alerts",

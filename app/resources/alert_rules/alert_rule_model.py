@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, String, Float
 from sqlalchemy.orm import relationship
-from db.model_base import Base
+from app.db.model_base import Base
 
 class AlertRule(Base):
     __tablename__ = "alert_rules"

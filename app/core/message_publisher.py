@@ -2,7 +2,6 @@ from amqpstorm import Connection, Message
 import json
 import logging
 from amqpstorm.exception import AMQPConnectionError
-import time
 from app.utils.config import settings
 
 logging.basicConfig(level=logging.INFO)

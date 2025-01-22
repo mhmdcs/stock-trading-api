@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
-from utils.config import settings
-from .market_schema import MarketRequest
+from app.utils.config import settings
+from app.resources.market.market_schema import MarketRequest
 import httpx
 
 async def process_market_prices_data(marketRequest: MarketRequest):
