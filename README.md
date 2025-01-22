@@ -59,6 +59,10 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
    ```bash
    uvicorn app.api.main:app --reload
    ```
+   or:
+   ```bash
+   PYTHONPATH="$(pwd)" python app/api/main.py
+   ```
 2. Access Swagger/OpenAPI Docs:
    - Open your browser and visit `http://localhost:8000/docs`.
 3. Test the endpoints:
@@ -89,11 +93,11 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
    ```
 2. Publish an alert manually:
    ```bash
-   export PYTHONPATH="$(pwd)" && python app/core/message_publisher.py
+   export PYTHONPATH="$(pwd)" python app/core/message_publisher.py
    ```
 3. Start the RabbitMQ consumer:
    ```bash
-   export PYTHONPATH="$(pwd)" && python app/event_subscriber/message_consumer.py
+   export PYTHONPATH="$(pwd)" python app/event_subscriber/message_consumer.py
    ```
 4. Verify RabbitMQ dashboard:
    - Visit `http://localhost:15672` (Default credentials: `guest/guest`).
@@ -116,11 +120,11 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 #### **How to Run and Test Phase 3**
 1. Start Celery Worker:
    ```bash
-   export PYTHONPATH="$(pwd)" && celery -A app.worker.celery_app worker --loglevel=info
+   export PYTHONPATH="$(pwd)" celery -A app.worker.celery_app worker --loglevel=info
    ```
 2. Start Celery Beat Scheduler:
    ```bash
-   export PYTHONPATH="$(pwd)" && celery -A app.worker.celery_app beat --loglevel=info
+   export PYTHONPATH="$(pwd)" celery -A app.worker.celery_app beat --loglevel=info
    ```
 3. Verify Periodic Tasks:
    - Check logs of the worker to see periodic task execution.

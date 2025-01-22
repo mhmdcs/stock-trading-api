@@ -15,4 +15,4 @@ async def on_startup():
     await seed_database()
 
 if __name__ == "__main__":
-    run("api.main:app")
+    run("app.api.main:app")
