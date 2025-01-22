@@ -1,8 +1,8 @@
-from celery_app import celery
-from resources.market.market_service import process_market_prices_data
-from resources.alert_rules.alert_rule_service import process_get_all_alert_rules
-from core.message_publisher import publish_threshold_alert
-from db.database import async_session
+from app.worker.celery_app import celery
+from app.resources.market.market_service import process_market_prices_data
+from app.resources.alert_rules.alert_rule_service import process_get_all_alert_rules
+from app.core.message_publisher import publish_threshold_alert
+from app.db.database import async_session
 import asyncio
 
 @celery.task
@@ -18,11 +18,13 @@ def fetch_and_check_market_data():
             for rule in alert_rules:
                 for market_item in market_data:
                     if rule.symbol == market_item["symbol"] and market_item["price"] is not None:
+                        print(f"fetched data for {rule.symbol} - rule threshold price is {rule.threshold_price} - current market price is {market_item["price"]}")
                         if (
                             (rule.threshold_price >= market_item["price"] and "Below" in rule.name)
                             or (rule.threshold_price <= market_item["price"] and "Above" in rule.name)
                         ):
                             alert_message = f"{rule.name}: Current Price {market_item['price']}"
+                            print(f"publishing alert notification: {alert_message}")
                             publish_threshold_alert(rule.symbol, alert_message, "recent", "medium")
 
     asyncio.run(async_task())

@@ -69,7 +69,7 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 
 ---
 
-### **Phase 2: RabbitMQ Enqueueing**
+### **Phase 2: RabbitMQ Message Enqueueing**
 
 **Features**:
 - Publishes `THRESHOLD_ALERT` events to RabbitMQ when stock prices cross thresholds.
@@ -116,7 +116,7 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 #### **How to Run and Test Phase 3**
 1. Start Celery Worker:
    ```bash
-   export PYTHONPATH="$(pwd)" && elery -A app.worker.celery_app worker --loglevel=info
+   export PYTHONPATH="$(pwd)" && celery -A app.worker.celery_app worker --loglevel=info
    ```
 2. Start Celery Beat Scheduler:
    ```bash
