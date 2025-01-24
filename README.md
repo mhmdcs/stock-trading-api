@@ -139,6 +139,28 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 
 ---
 
+## Optional: Run the tests
+If you have installed `pytest`, which you should if you installed the required dependencies via `pip install -r requirements.txt`, then you can run the unit tests written in the `tests` directory via running `pytest --disable-warnings -vx` from the project's root directory.
+
+Although make sure you've created a throwaway test db beforehand:
+
+Connect to cockroachdb:
+   ```bash
+   cockroach sql --insecure --host=localhost:26257
+   ```
+
+Create trading_test_db database inside the SQL shell by running the following command:
+   ```bash
+   CREATE DATABASE trading_test_db;
+   ```
+
+Check if the database was created successfully:
+   ```bash
+   SHOW DATABASES;
+   ```
+
+---
+
 ## **Environment Variables**
 
 Add these to your `.env` file:
