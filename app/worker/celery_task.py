@@ -4,11 +4,11 @@ from app.resources.alert_rules.alert_rule_service import process_get_all_alert_r
 from app.core.message_publisher import publish_threshold_alert
 from app.db.database import async_session
 from app.resources.market.market_schema import MarketRequest
-from app.db.database_utils import initialize_database
+from app.db.database_utils import create_database_schema
 
 @celery.task
 async def fetch_and_check_market_data():
-    await initialize_database()
+    await create_database_schema()
 
     async with async_session() as db:
         alert_rules = await process_get_all_alert_rules(db)

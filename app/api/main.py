@@ -1,7 +1,7 @@
 from uvicorn import run
 from fastapi import FastAPI
 from app.api.routes import init_routes
-from app.db.database_utils import initialize_database, seed_database
+from app.db.database_utils import create_database_schema, seed_database
 
 app = init_routes(FastAPI())
 
@@ -11,7 +11,7 @@ async def root():
 
 @app.on_event("startup")
 async def on_startup():
-    await initialize_database()
+    await create_database_schema()
     await seed_database()
 
 if __name__ == "__main__":

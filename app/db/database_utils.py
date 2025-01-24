@@ -1,7 +1,7 @@
 from app.db.database import engine, Base, get_db
 from app.resources.alert_rules.alert_rule_dal import create_alert_rule, get_all_alert_rules
 
-async def initialize_database():
+async def create_database_schema():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
