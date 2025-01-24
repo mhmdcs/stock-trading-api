@@ -55,7 +55,8 @@ def process_alert_event(symbol: str, alert_message: str, status: str, priority: 
             await process_create_alert(db, symbol, alert_message, status, priority, alert_rule.id)
             logger.info(f"Alert created for symbol: {symbol}, alert_message: {alert_message}")
 
-    asyncio.run(async_process())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(async_process())
 
 if __name__ == "__main__":
     logger.info("Starting RabbitMQ Subscriber...")
