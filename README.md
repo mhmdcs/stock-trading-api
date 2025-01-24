@@ -132,7 +132,9 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 
 ![phase3_a](./imgs/phase3_a.png)
 ![phase3_b](./imgs/phase3_b.png)
-
+![phase3_c](./imgs/phase3_c.png)
+![phase3_d](./imgs/phase3_d.png)
+![phase3_e](./imgs/phase3_e.png)
 
 ---
 
