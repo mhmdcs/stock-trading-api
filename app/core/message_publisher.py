@@ -1,11 +1,6 @@
 from amqpstorm import Connection, Message
 import json
-import logging
-from amqpstorm.exception import AMQPConnectionError
 from app.utils.config import settings
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("RabbitMQ Publisher")
 
 RABBITMQ_HOST = settings.rabbitmq_host
 RABBITMQ_USER = settings.rabbitmq_user
@@ -32,9 +27,9 @@ def publish_threshold_alert(symbol: str, alert_message: str, status: str, priori
         message.content_type = "application/json"
 
         message.publish(exchange=EXCHANGE_NAME, routing_key=ROUTING_KEY)
-        logger.info(f"Published message: {message_content}")
+        print(f"RabbitMQ Publisher: Published message: {message_content}")
     except Exception as e:
-        logger.error(f"Failed to publish message: {e}")
+        print(f"RabbitMQ Publisher: Failed to publish message: {e}")
     finally:
         if connection:
             connection.close()

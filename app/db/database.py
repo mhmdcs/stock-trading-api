@@ -7,11 +7,12 @@ from app.utils.config import settings
 
 engine = create_async_engine(
     settings.database_connection_string,
-    isolation_level="SERIALIZABLE",
-    echo=True)
+    isolation_level="SERIALIZABLE"
+    )
 
 async_session = sessionmaker(
-    bind=engine, expire_on_commit=False, class_=AsyncSession
+    bind=engine,
+    class_=AsyncSession
 )
 
 async def get_db():

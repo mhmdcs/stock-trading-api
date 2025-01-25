@@ -1,12 +1,12 @@
-from app.db.database import engine, Base, get_db
+from app.db.database import engine, Base, async_session
 from app.resources.alert_rules.alert_rule_dal import create_alert_rule, get_all_alert_rules
 
-async def create_database_schema():
+async def setup_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-async def seed_database():
-    async for db in get_db():
+async def seed_db():
+    async with async_session() as db:
         existing_rules = await get_all_alert_rules(db)
         if not existing_rules:  # Only seed if the table is empty
             initial_data = [
@@ -15,10 +15,9 @@ async def seed_database():
             ]
             for data in initial_data:
                 await create_alert_rule(db, **data)
-        break
     
 # just for testing purposes
-async def reset_database():
+async def reset_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)

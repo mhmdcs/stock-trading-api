@@ -13,6 +13,11 @@ celery = AsyncCelery("tasks", broker=CELERY_BROKER_URL)
 
 celery.conf.include = ['app.worker.celery_task']
 
+celery.conf.update(
+    timezone="Asia/Riyadh",
+    broker_connection_retry_on_startup=True,
+)
+
 celery.conf.beat_schedule = {
     "fetch-market-data-every-5-minutes": {
         "task": "app.worker.celery_task.fetch_and_check_market_data",
@@ -20,4 +25,3 @@ celery.conf.beat_schedule = {
     }
 }
 
-celery.conf.timezone = "Asia/Riyadh"

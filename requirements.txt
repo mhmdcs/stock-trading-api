@@ -3,6 +3,7 @@ amqp==5.3.1
 AMQPStorm==2.11.0
 annotated-types==0.7.0
 anyio==4.8.0
+asgiref==3.8.1
 asyncpg==0.30.0
 billiard==4.2.1
 celery==5.4.0
