@@ -55,6 +55,13 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
   - `POST /market-prices`: Fetch current stock prices.
 
 #### **How to Run and Test Phase 1**
+1. Start the FastAPI server, RabbitMQ (broker, publisher, consumer), and Celery (Beat and Worker) via Docker Compose automatically:
+    ```bash
+   make up
+   ```
+
+Or start them manually:
+
 1. Start the FastAPI server:
    ```bash
    uvicorn app.api.main:app --reload
@@ -63,6 +70,7 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
    ```bash
    PYTHONPATH="$(pwd)" python app/api/main.py
    ```
+
 2. Access Swagger/OpenAPI Docs:
    - Open your browser and visit `http://localhost:8000/docs`.
 3. Test the endpoints:
@@ -83,23 +91,22 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 - RabbitMQ is managed via Docker Compose.
 
 #### **How to Run and Test Phase 2**
-1. Start RabbitMQ via Docker Compose:
+1. Start the FastAPI server, RabbitMQ (broker, publisher, consumer), and Celery (Beat and Worker) via Docker Compose automatically:
     ```bash
    make up
    ```
-   or:
-    ```bash
-   docker-compose up -d
-   ```
-2. Publish an alert manually:
+
+Or start them manually:
+
+1. Publish an alert manually:
    ```bash
    PYTHONPATH="$(pwd)" python app/core/message_publisher.py
    ```
-3. Start the RabbitMQ consumer:
+2. Start the RabbitMQ consumer:
    ```bash
    PYTHONPATH="$(pwd)" python app/event_subscriber/message_consumer.py
    ```
-4. Verify RabbitMQ dashboard:
+3. Verify RabbitMQ dashboard:
    - Visit `http://localhost:15672` (Default credentials: `guest/guest`).
 
 ![phase2_a](./imgs/phase2_a.png)
@@ -107,7 +114,6 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 ![phase2_c](./imgs/phase2_c.png)
 ![phase2_d](./imgs/phase2_d.png)
 ![phase2_e](./imgs/phase2_e.png)
-
 
 ---
 
@@ -118,11 +124,18 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 - Publishes alerts to RabbitMQ if thresholds are breached.
 
 #### **How to Run and Test Phase 3**
-1. Start Celery Worker:
+1. Start the FastAPI server, RabbitMQ (broker, publisher, consumer), and Celery (Beat and Worker) via Docker Compose automatically:
+    ```bash
+   make up
+   ```
+
+Or start them manually:
+
+1. Start Celery Worker manually:
    ```bash
    PYTHONPATH="$(pwd)" celery -A app.worker.celery_app worker --loglevel=info
    ```
-2. Start Celery Beat Scheduler:
+2. Start Celery Beat Scheduler manaully:
    ```bash
    PYTHONPATH="$(pwd)" celery -A app.worker.celery_app beat --loglevel=info
    ```
@@ -142,22 +155,7 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
 ## Optional: Run the tests
 If you have installed `pytest`, which you should if you installed the required dependencies via `pip install -r requirements.txt`, then you can run the unit tests written in the `tests` directory via running `pytest --disable-warnings -vx` from the project's root directory.
 
-Although make sure you've created a throwaway test db beforehand:
-
-Connect to cockroachdb:
-   ```bash
-   cockroach sql --insecure --host=localhost:26257
-   ```
-
-Create trading_test_db database inside the SQL shell by running the following command:
-   ```bash
-   CREATE DATABASE trading_test_db;
-   ```
-
-Check if the database was created successfully:
-   ```bash
-   SHOW DATABASES;
-   ```
+![tests_a](./imgs/tests_a.png)
 
 ---
 
