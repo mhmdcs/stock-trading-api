@@ -2,7 +2,6 @@ import pika
 import json
 from asgiref.sync import async_to_sync
 from app.resources.alerts.alert_service import process_create_alert
-from app.resources.alert_rules.alert_rule_service import process_get_alert_rule_by_symbol
 from app.utils.config import settings
 from app.db.database import async_session
 
@@ -45,8 +44,7 @@ def on_event(ch, method, properties, body):
 async def process_alert_event(symbol: str, alert_message: str, status: str, priority: str):
     """Process the THRESHOLD_ALERT event and create a new alert record."""
     async with async_session() as db:
-        alert_rule = await process_get_alert_rule_by_symbol(db, symbol)
-        await process_create_alert(db, symbol, alert_message, status, priority, alert_rule.id)
+        await process_create_alert(db, symbol, alert_message, status, priority)
         print(f"RabbitMQ Subscriber: Alert created for symbol: {symbol}, alert_message: {alert_message}")
 
 
