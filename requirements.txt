@@ -1,3 +1,4 @@
+aiofiles==24.1.0
 alembic==1.14.0
 amqp==5.3.1
 AMQPStorm==2.11.0

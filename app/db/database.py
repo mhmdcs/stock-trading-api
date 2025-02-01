@@ -3,7 +3,10 @@ from app.resources.alert_rules.alert_rule_model import AlertRule
 from app.resources.alerts.alert_model import Alert 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import text
 from app.utils.config import settings
+from app.resources.alert_rules.alert_rule_dal import create_alert_rule, get_all_alert_rules
+import aiofiles
 
 engine = create_async_engine(
     settings.database_connection_string,
@@ -12,9 +15,32 @@ engine = create_async_engine(
 
 async_session = sessionmaker(
     bind=engine,
-    class_=AsyncSession
+    class_=AsyncSession,
+    expire_on_commit=False
 )
 
 async def get_db():
     async with async_session() as session:
         yield session
+
+async def setup_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    async with async_session() as db:
+        async with aiofiles.open("dev_setup/sql/seed.sql", "r") as file:
+            sql_script = await file.read()
+
+        try:
+            await db.execute(text(sql_script))
+            await db.commit()
+        except Exception as e:
+            print(f"failed to seed database: {e}")
+    
+# just for testing purposes
+async def reset_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
+
+    await engine.dispose()

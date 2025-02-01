@@ -4,7 +4,7 @@ from app.resources.alert_rules.alert_rule_service import process_get_all_alert_r
 from app.core.message_publisher import publish_threshold_alert
 from app.db.database import async_session
 from app.resources.market.market_schema import MarketRequest
-from app.db.database_utils import setup_db
+from app.db.database import setup_db
 
 @celery.task
 async def fetch_and_check_market_data():
