@@ -55,7 +55,7 @@ The project is built with **FastAPI**, **RabbitMQ**, and **Celery**.
   - `POST /market-prices`: Fetch current stock prices.
 
 #### **How to Run and Test Phase 1**
-1. Start the FastAPI server, RabbitMQ (broker, publisher, consumer), and Celery (Beat and Worker) via Docker Compose automatically:
+1. Start the FastAPI server, RabbitMQ (broker, consumer), and Celery (Beat and Worker) via Docker Compose automatically:
     ```bash
    make up
    ```
@@ -91,22 +91,20 @@ Or start them manually:
 - RabbitMQ is managed via Docker Compose.
 
 #### **How to Run and Test Phase 2**
-1. Start the FastAPI server, RabbitMQ (broker, publisher, consumer), and Celery (Beat and Worker) via Docker Compose automatically:
+1. Start the FastAPI server, RabbitMQ (broker, consumer), and Celery (Beat and Worker) via Docker Compose automatically:
     ```bash
    make up
    ```
 
-Or start them manually:
-
-1. Publish an alert manually:
+2. Publish an alert manually:
    ```bash
    PYTHONPATH="$(pwd)" python app/core/message_publisher.py
    ```
-2. Start the RabbitMQ consumer:
+3. Start the RabbitMQ consumer manually:
    ```bash
    PYTHONPATH="$(pwd)" python app/event_subscriber/message_consumer.py
    ```
-3. Verify RabbitMQ dashboard:
+4. Verify RabbitMQ dashboard:
    - Visit `http://localhost:15672` (Default credentials: `guest/guest`).
 
 ![phase2_a](./imgs/phase2_a.png)
@@ -124,7 +122,7 @@ Or start them manually:
 - Publishes alerts to RabbitMQ if thresholds are breached.
 
 #### **How to Run and Test Phase 3**
-1. Start the FastAPI server, RabbitMQ (broker, publisher, consumer), and Celery (Beat and Worker) via Docker Compose automatically:
+1. Start the FastAPI server, RabbitMQ (broker, consumer), and Celery (Beat and Worker) via Docker Compose automatically:
     ```bash
    make up
    ```

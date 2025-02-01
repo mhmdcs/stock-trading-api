@@ -70,20 +70,6 @@ services:
       database:
         condition: service_healthy  
 
-  message_publisher:
-    build:
-      context: ../.
-      dockerfile: dev_setup/Dockerfile
-    container_name: rabbitmq-publisher
-    command: python app/core/message_publisher.py
-    networks:
-      - internal_nw
-    env_file:
-      - ../.env
-    depends_on:
-      broker:
-        condition: service_healthy
-
   message_consumer:
     build:
       context: ../.
