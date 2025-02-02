@@ -11,4 +11,4 @@ class AlertRule(Base):
     name = Column(String, nullable=False, unique=True) # e.g. "Apple Below $150", "Tesla Below $150"
     threshold_price = Column(Float, nullable=False)
     symbol = Column(String, nullable=False)
-    alerts = relationship("Alert", back_populates="alert_rule")
+    alerts = relationship("Alert", back_populates="alert_rule", cascade="all, delete")

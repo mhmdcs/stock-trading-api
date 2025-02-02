@@ -12,5 +12,5 @@ class Alert(Base):
     alert_message = Column(String, nullable=False) # e.g. "Apple Above $300"
     status = Column(String, nullable=False) # e.g. now, recent, old
     priority = Column(String, nullable=False) # e.g. high, medium, low
-    alert_rule_id = Column(UUID(as_uuid=True), ForeignKey("alert_rules.id"), nullable=False)
+    alert_rule_id = Column(UUID(as_uuid=True), ForeignKey("alert_rules.id", ondelete="CASCADE"), nullable=False)
     alert_rule = relationship("AlertRule", back_populates="alerts")
