@@ -5,6 +5,11 @@ import uuid
 
 async def create_alert_rule(db: AsyncSession, name: str, threshold_price: float, symbol: str):
     new_alert_rule = AlertRule(name=name, threshold_price=threshold_price, symbol=symbol)
+    
+    existing_rule = await db.execute(select(AlertRule).where(AlertRule.name == name))
+    if existing_rule.scalar_one_or_none():
+        return None
+    
     db.add(new_alert_rule)
     await db.commit()
     await db.refresh(new_alert_rule)

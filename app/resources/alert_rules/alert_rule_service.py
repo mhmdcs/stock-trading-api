@@ -5,7 +5,10 @@ from app.resources.alert_rules.alert_rule_schema import AlertRuleCreate, AlertRu
 from uuid import UUID
 
 async def process_create_alert_rule(db: AsyncSession, data: AlertRuleCreate):
-    return await create_alert_rule(db, data.name, data.threshold_price, data.symbol)
+    alert_rule = await create_alert_rule(db, data.name, data.threshold_price, data.symbol)
+    if not alert_rule:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Alert Rule with this name already exists")
+    return alert_rule
 
 async def process_get_all_alert_rules(db: AsyncSession):
     return await get_all_alert_rules(db)
