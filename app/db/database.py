@@ -1,3 +1,5 @@
+import contextlib
+from typing import AsyncGenerator
 from app.db.base_model import Base
 from app.resources.alert_rules.alert_rule_model import AlertRule 
 from app.resources.alerts.alert_model import Alert 
@@ -22,6 +24,16 @@ async_session = sessionmaker(
 async def get_db():
     async with async_session() as session:
         yield session
+        
+# we use this only in processes like celery and rabbitmq consumer that shouldn't keep the engine leaking with every task
+@contextlib.asynccontextmanager
+async def get_db_and_dispose_engine() -> AsyncGenerator:
+    try:
+        db = async_session()
+        yield db
+    finally:
+        await db.close()
+        await engine.dispose()
 
 async def setup_db():
     async with engine.begin() as conn:

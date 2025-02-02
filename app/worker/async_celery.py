@@ -1,6 +1,6 @@
 from celery import Celery
 from inspect import isawaitable
-import asyncio
+from asgiref.sync import async_to_sync
 
 # Celery doesn't support asyncio natively, so we have resort to a wrapper around it to enable calling `async def` functions within tasks
 # taken from: https://stackoverflow.com/a/69585025/9133569
@@ -24,11 +24,10 @@ class AsyncCelery(Celery):
                     if isawaitable(result):
                         await result
                 except Exception as e:
-                    # Log the error or handle it as needed
-                    print(f"Task failed: {e}")
+                    print(f"task failed: {e}")
                     raise
 
             def __call__(self, *args, **kwargs):
-                asyncio.run(self._run(*args, **kwargs))
+                async_to_sync(self._run)(*args, **kwargs)
 
         self.Task = ContextTask

@@ -3,7 +3,7 @@ import json
 from asgiref.sync import async_to_sync
 from app.resources.alerts.alert_service import process_create_alert
 from app.utils.config import settings
-from app.db.database import async_session
+from app.db.database import get_db_and_dispose_engine
 
 RABBITMQ_HOST = settings.rabbitmq_host
 RABBITMQ_USER = settings.rabbitmq_user
@@ -43,7 +43,7 @@ def on_event(ch, method, properties, body):
 
 async def process_alert_event(symbol: str, alert_message: str, status: str, priority: str):
     """Process the THRESHOLD_ALERT event and create a new alert record."""
-    async with async_session() as db:
+    async with get_db_and_dispose_engine() as db:
         await process_create_alert(db, symbol, alert_message, status, priority)
         print(f"RabbitMQ Subscriber: Alert created for symbol: {symbol}, alert_message: {alert_message}")
 
